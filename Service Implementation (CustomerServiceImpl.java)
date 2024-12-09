@@ -1,0 +1,37 @@
+package com.klef.jfsd.exam.service;
+
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import com.klef.jfsd.exam.model.Customer;
+import com.klef.jfsd.exam.repository.CustomerRepository;
+
+@Service
+public class CustomerServiceImpl implements CustomerService {
+    @Autowired
+    private CustomerRepository customerRepository;
+
+    @Override
+    public Customer addCustomer(Customer customer) {
+        return customerRepository.save(customer);
+    }
+
+    @Override
+    public Customer updateCustomer(Long id, Customer customer) {
+        Optional<Customer> existingCustomer = customerRepository.findById(id);
+        if (existingCustomer.isPresent()) {
+            Customer updatedCustomer = existingCustomer.get();
+            updatedCustomer.setName(customer.getName());
+            updatedCustomer.setAddress(customer.getAddress());
+            return customerRepository.save(updatedCustomer);
+        }
+        return null;
+    }
+
+    @Override
+    public List<Customer> getAllCustomers() {
+        return customerRepository.findAll();
+    }
+}
